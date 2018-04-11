@@ -4,6 +4,15 @@ import styled from 'styled-components';
 import type {camelGameProps} from "./interface";
 import camelSVG from "../img/camel.svg";
 
+const AppWrapper = styled.div`
+  height: 100vh;
+  width: 100vw;
+  padding: 1em;
+  box-sizing: border-box;
+  background: linear-gradient(lightgoldenrodyellow, yellow);
+  display: grid;
+`;
+
 const GameWindow = styled.section`
   position: relative;
   background: linear-gradient(#555,#bb8 );
@@ -24,20 +33,21 @@ const Horizon = styled.div`
 const Camel = styled.div`
   opacity: 0.7;
   position: absolute;
-  height: 10%;
   width: 10%;
-  bottom: 17%;
+  bottom: 15%;
   left: ${props => props.position * 0.82 + 5 }%;
 `;
 
 function CamelGame(props: camelGameProps) {
   return (
-    <GameWindow>
-      <Camel position={0}>
-        <img src={camelSVG}/>
-      </Camel>
-      <Horizon/>
-    </GameWindow>
+    <AppWrapper>
+      <GameWindow>
+        <Camel position={0}>
+          <img src={camelSVG}/>
+        </Camel>
+        <Horizon/>
+      </GameWindow>
+    </AppWrapper>
   );
 }
 
