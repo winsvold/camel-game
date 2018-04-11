@@ -1,26 +1,57 @@
+// @flow
 import React, {Component} from 'react';
-import logo from './logo.svg';
-import './App.css';
 import CamelGame from "./frontend/camelgame";
 import {mockProps} from "./frontend/mockProps";
-import styled from 'styled-components';
+import GameLogic from "./backend/gameLogic";
+import {CamelTiredNess, Thirst} from "./backend/enums";
 
+function getTransientData(state) {
+  const tiredness = state.camelTired;
+  const camelTiredStatus =
+    tiredness < 5 ? CamelTiredNess.Happy :
+      tiredness <= 8 ? CamelTiredNess.Tired :
+        CamelTiredNess.Dead;
+
+  const thirst = state.thirst;
+  const thirstStatus =
+    thirst < 3 ? Thirst.NotThirsty :
+      thirst < 5 ? Thirst.Thirsty :
+        thirst <= 6 ? Thirst.VeryThirsty :
+          Thirst.Dead;
+
+  return {
+    ...state,
+    camelTiredStatus,
+    thirstStatus
+  };
+}
 
 class App extends Component {
+  gameLogic: GameLogic;
+
+  constructor() {
+    super();
+    this.gameLogic = new GameLogic();
+    this.gameLogic.moderateSpeed();
+    this.gameLogic.moderateSpeed();
+    this.gameLogic.moderateSpeed();
+    this.gameLogic.moderateSpeed();
+    this.gameLogic.drink();
+    this.gameLogic.fullSpeed();
+    this.gameLogic.fullSpeed();
+    this.gameLogic.sleep();
+    this.gameLogic.fullSpeed();
+    this.gameLogic.fullSpeed();
+    this.gameLogic.fullSpeed();
+    this.gameLogic.sleep();
+    this.gameLogic.fullSpeed();
+    console.log(getTransientData(this.gameLogic.getState()));
+  }
+
   render() {
     return (
       <CamelGame {...mockProps} />
-    ) || (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo"/>
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-      </div>
-    );
+    )
   }
 }
 

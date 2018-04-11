@@ -1,11 +1,14 @@
 // @flow
-import {Choices} from "./choicesEnum";
+import {Actions} from "./enums";
 
 type stateType = {
   done: boolean,
+  dead: boolean,
   milesTraveled: number,
   thirst: number,
+  thirstLimit: number,
   camelTired: number,
+  camelTiredLimit: number,
   nativesTraveled: number,
   canteen: number,
   milesFinish: number
@@ -13,59 +16,117 @@ type stateType = {
 
 const defaultState: stateType = {
   done: false,
+  dead: false,
   milesTraveled: 0,
   thirst: 0,
+  thirstLimit: 6,
   camelTired: 0,
+  camelTiredLimit: 8,
   nativesTraveled: -20,
   canteen: 3,
-  milesFinish: 300
+  milesFinish: 200
 };
 
-function randomRange(min, max){
-  return min + Math.random * max;
+function randomRange(min: number, max: number) {
+  return min + Math.random() * max;
 }
 
 class GameLogic {
-    constructor(){
-      this.state = { ...defaultState };
-      this.stateChangeLog = [defaultState];
+  state: stateType;
+  stateChangeLog: Array<any>;
+  actionLog: Array<any>;
+
+  constructor() {
+    this.state = {...defaultState};
+    this.stateChangeLog = [this.state];
+    this.actionLog = [Actions.InitializeGame];
+  }
+
+  getState() {
+    return {
+      ...this.state,
+      action: this.actionLog[this.actionLog.length - 1]
+    };
+  }
+
+  updateState(stateUpdate: any, action: typeof Actions) {
+    if (this.state.dead || this.state.done) {
+      console.log('Game Is Over');
+      return;
     }
-    action(choice){
-      switch(choice){
-        case Choices.Drink:
-          this.drink();
-          break;
-        case Choices.ModerateSpeed:
-          this.moderateSpeed();
-          break;
-        default:
-          return new Error('Action not implemented');
-      }
-    }
-    updateState(stateChange: stateType){
-      const newState: stateType = {
-        ...this.state,
-        milesTraveled: this.state.milesTraveled + stateChange.milesTraveled || 0,
-        thirst: this.state.thirst + stateChange.thirst || 0,
-        camelTired: this.state.camelTired + stateChange.camelTired || 0,
-        nativesTraveled: this.state.nativesTraveled + stateChange.nativesTraveled || 0,
-        canteen: this.state.canteen + stateChange.canteen || 0
+    this.actionLog.push(action);
+    this.stateChangeLog.push(stateUpdate);
+    this.state = {
+      ...this.state,
+      ...stateUpdate
+    };
+    this.state = {
+      ...this.state,
+      dead: this.isDead()
+    };
+    console.log(this.getState());
+  }
+
+  isDead() {
+    return this.state.thirst > this.state.thirstLimit ||
+      this.state.camelTired > this.state.camelTiredLimit ||
+      this.state.milesTraveled < this.state.nativesTraveled;
+  }
+
+  foundOasis() {
+    const stateUpdate = {
+      thirst: 0,
+      camelTired: 0
+    };
+    this.updateState(stateUpdate, Actions.FoundOasis);
+  }
+
+  drink() {
+    let stateUpdate;
+    if(this.state.canteen > 0){
+      stateUpdate = {
+        thirst: 0,
+        canteen: this.state.canteen - 1
       };
-      this.stateChangeLog.push(stateChange);
-      this.state = newState;
+    } else {
+      stateUpdate = {};
     }
-    drink(){
-      const stateChange: stateType = { thirst: - this.state.thirst };
-      this.updateState(stateChange);
+    this.updateState(stateUpdate, Actions.Drink);
+  }
+
+  moderateSpeed() {
+    const stateUpdate = {
+      camelTired: this.state.camelTired + randomRange(0, 1),
+      milesTraveled: this.state.milesTraveled + randomRange(5, 12),
+      thirst: this.state.thirst + 1,
+      nativesTraveled: this.state.nativesTraveled + randomRange(7, 15)
+    };
+    this.updateState(stateUpdate, Actions.ModerateSpeed);
+    if (randomRange(0, 20) < 1) {
+      this.foundOasis();
     }
-    moderateSpeed(){
-      const stateChange: stateType = {
-        camelTired: randomRange(0,1),
-        milesTraveled: randomRange(5,12),
-        thirst: 1,
-      };
-      this.updateState(stateChange);
+  }
+
+  fullSpeed() {
+    const stateUpdate = {
+      camelTired: this.state.camelTired + randomRange(1, 4),
+      milesTraveled: this.state.milesTraveled + randomRange(10, 20),
+      thirst: this.state.thirst + 1,
+      nativesTraveled: this.state.nativesTraveled + randomRange(7, 15)
+    };
+    this.updateState(stateUpdate, Actions.FullSpeed);
+    if (randomRange(0, 20) < 1) {
+      this.foundOasis();
     }
+  }
+
+  sleep() {
+    const stateUpdate = {
+      camelTired: 0,
+      nativesTraveled: this.state.nativesTraveled + randomRange(7, 15)
+    };
+    this.updateState(stateUpdate, Actions.Rest)
+  }
 }
 
 export default GameLogic;
