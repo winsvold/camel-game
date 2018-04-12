@@ -36,16 +36,17 @@ class App extends Component {
     this.gameLogic.moderateSpeed();
     this.gameLogic.moderateSpeed();
     this.gameLogic.moderateSpeed();
-    this.gameLogic.drink();
     this.gameLogic.fullSpeed();
     this.gameLogic.fullSpeed();
     this.gameLogic.sleep();
     this.gameLogic.fullSpeed();
     this.gameLogic.fullSpeed();
+    this.gameLogic.drink();
     this.gameLogic.fullSpeed();
     this.gameLogic.sleep();
     this.gameLogic.fullSpeed();
     console.log(getTransientData(this.gameLogic.getState()));
+    console.log(this.gameLogic.getLogs());
   }
 
   render() {
