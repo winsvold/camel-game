@@ -38,18 +38,20 @@ const defaultState: stateType = {
 };
 
 function randomRange(min: number, max: number) {
-  return min + Math.random() * max;
+  return min + Math.random() * (max - min);
 }
 
 class GameLogic {
   state: stateType;
+  fireUpdate: Function;
   stateChangeLog: Array<any>;
   actionLog: Array<any>;
 
-  constructor() {
+  constructor(fireUpdate: Function) {
     this.state = {...defaultState};
     this.stateChangeLog = [this.state];
     this.actionLog = [Actions.InitializeGame];
+    this.fireUpdate = fireUpdate;
   }
 
   getState() {
@@ -83,11 +85,16 @@ class GameLogic {
       causeOfDeath: this.causeOfDeath(),
       done: this.isGameOver()
     };
+    this.fireUpdate();
     console.log(this.getState());
   }
 
   isGameOver(){
-    return (this.isDead())
+    return (this.isDead()) || this.victory();
+  }
+
+  victory(){
+    return this.state.milesTraveled > this.state.milesFinish;
   }
 
   causeOfDeath(){

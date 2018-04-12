@@ -4,8 +4,9 @@ import CamelGame from "./frontend/camelgame";
 import {mockProps} from "./frontend/mockProps";
 import GameLogic from "./backend/gameLogic";
 import {CamelTiredNess, Thirst} from "./backend/enums";
+import SimpleFrontEnd from "./frontend/SimpleFrontEnd";
 
-function getTransientData(state) {
+function getFrontEndPropsFromGameState(state) {
   const tiredness = state.camelTired;
   const camelTiredStatus =
     tiredness < 5 ? CamelTiredNess.Happy :
@@ -26,32 +27,29 @@ function getTransientData(state) {
   };
 }
 
+const FrontEnds = {
+  Simple: 'simple'
+};
+
 class App extends Component {
   gameLogic: GameLogic;
 
   constructor() {
     super();
-    this.gameLogic = new GameLogic();
-    this.gameLogic.moderateSpeed();
-    this.gameLogic.moderateSpeed();
-    this.gameLogic.moderateSpeed();
-    this.gameLogic.moderateSpeed();
-    this.gameLogic.fullSpeed();
-    this.gameLogic.fullSpeed();
-    this.gameLogic.sleep();
-    this.gameLogic.fullSpeed();
-    this.gameLogic.fullSpeed();
-    this.gameLogic.drink();
-    this.gameLogic.fullSpeed();
-    this.gameLogic.sleep();
-    this.gameLogic.fullSpeed();
-    console.log(getTransientData(this.gameLogic.getState()));
-    console.log(this.gameLogic.getLogs());
+    this.gameLogic = new GameLogic(() => this.setState({}));
+    this.state = {
+      frontEnd: FrontEnds.Simple
+    };
   }
 
   render() {
+    const gameState = this.gameLogic.getState();
+    const frontEnd =
+      this.state.frontEnd === FrontEnds.Simple
+        ? <SimpleFrontEnd {...getFrontEndPropsFromGameState(gameState)} gameLogic={this.gameLogic} />
+        : <CamelGame {...mockProps} />;
     return (
-      <CamelGame {...mockProps} />
+      frontEnd
     )
   }
 }
