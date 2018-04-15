@@ -38,20 +38,21 @@ const defaultState: stateType = {
 };
 
 function randomRange(min: number, max: number) {
-  return min + Math.random() * (max - min);
+  let rand = min + Math.random() * (max - min);
+  return Math.round(rand);
 }
 
 class GameLogic {
   state: stateType;
-  fireUpdate: Function;
-  stateChangeLog: Array<any>;
+  updateFrontend: Function;
+  stateLog: Array<any>;
   actionLog: Array<any>;
 
   constructor(fireUpdate: Function) {
     this.state = {...defaultState};
-    this.stateChangeLog = [this.state];
+    this.stateLog = [this.state];
     this.actionLog = [Actions.InitializeGame];
-    this.fireUpdate = fireUpdate;
+    this.updateFrontend = fireUpdate;
   }
 
   getState() {
@@ -64,29 +65,28 @@ class GameLogic {
   getLogs(){
     return {
       actionLog: this.actionLog,
-      stateChangeLog: this.stateChangeLog
+      stateLog: this.stateLog
     }
   }
 
   updateState(stateUpdate: Object, action: typeof Actions) {
-    if (this.state.done) {
+    if (this.isGameOver()) {
       console.log('Game is over');
       return;
     }
     this.actionLog.push(action);
-    this.stateChangeLog.push(stateUpdate);
     this.state = {
       ...this.state,
       ...stateUpdate
     };
+    this.stateLog.push(this.state);
     this.state = {
       ...this.state,
       dead: this.isDead(),
       causeOfDeath: this.causeOfDeath(),
-      done: this.isGameOver()
+      done: this.victory()
     };
-    this.fireUpdate();
-    console.log(this.getState());
+    this.updateFrontend();
   }
 
   isGameOver(){
@@ -134,7 +134,7 @@ class GameLogic {
 
   moderateSpeed() {
     const stateUpdate = {
-      camelTired: this.state.camelTired + randomRange(0, 1),
+      camelTired: this.state.camelTired + randomRange(0, 1.5),
       milesTraveled: this.state.milesTraveled + randomRange(5, 12),
       thirst: this.state.thirst + 1,
       nativesTraveled: this.state.nativesTraveled + randomRange(7, 15)
@@ -160,6 +160,10 @@ class GameLogic {
       nativesTraveled: this.state.nativesTraveled + randomRange(7, 15)
     };
     this.updateState(stateUpdate, Actions.Rest)
+  }
+
+  statusCheck() {
+    this.updateState({}, Actions.StatusCheck)
   }
 }
 

@@ -21,3 +21,10 @@ export const Thirst = {
   VeryThirsty: "VeryThirsty",
   Dead: "Dead"
 };
+
+export const Natives = {
+  Close: 'Close',
+  VeryClose: 'VeryClose',
+  CaughtUp: 'CaughtUp',
+  Distant: 'Distant'
+};

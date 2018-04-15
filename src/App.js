@@ -3,10 +3,12 @@ import React, {Component} from 'react';
 import CamelGame from "./frontend/camelgame";
 import {mockProps} from "./frontend/mockProps";
 import GameLogic from "./backend/gameLogic";
-import {CamelTiredNess, Thirst} from "./backend/enums";
+import {CamelTiredNess, Natives, Thirst} from "./backend/enums";
 import SimpleFrontEnd from "./frontend/SimpleFrontEnd";
 
-function getFrontEndPropsFromGameState(state) {
+function getFrontEndPropsFromBackend(gameLogic: GameLogic) {
+  const state = gameLogic.getState();
+
   const tiredness = state.camelTired;
   const camelTiredStatus =
     tiredness < 5 ? CamelTiredNess.Happy :
@@ -20,10 +22,31 @@ function getFrontEndPropsFromGameState(state) {
         thirst <= 6 ? Thirst.VeryThirsty :
           Thirst.Dead;
 
+  const nativesDistance = state.milesTraveled - state.nativesTraveled;
+  const nativesStatus =
+    nativesDistance <= 0 ? Natives.CaughtUp :
+      nativesDistance < 7 ? Natives.VeryClose :
+        nativesDistance < 15 ? Natives.Close :
+          Natives.Distant;
+
+  const actions = {
+    drink: () => gameLogic.drink(),
+    travelModerateSpeed: () => gameLogic.moderateSpeed(),
+    travelFullSpeed: () => gameLogic.fullSpeed(),
+    rest: () => gameLogic.sleep(),
+    statusCheck: () => gameLogic.statusCheck()
+  };
+
+  const prevState = gameLogic.getLogs().stateLog[gameLogic.getLogs().stateLog.length - 2];
   return {
     ...state,
+    prevState: prevState,
+    nativesStatus: nativesStatus,
+    nativesDistance: nativesDistance,
+    milesTraveledLastRound: prevState ? state.milesTraveled - prevState.milesTraveled : 0,
     camelTiredStatus,
-    thirstStatus
+    thirstStatus,
+    actions: actions
   };
 }
 
@@ -43,10 +66,10 @@ class App extends Component {
   }
 
   render() {
-    const gameState = this.gameLogic.getState();
+    const frontEndProps = getFrontEndPropsFromBackend(this.gameLogic);
     const frontEnd =
       this.state.frontEnd === FrontEnds.Simple
-        ? <SimpleFrontEnd {...getFrontEndPropsFromGameState(gameState)} gameLogic={this.gameLogic} />
+        ? <SimpleFrontEnd {...frontEndProps} />
         : <CamelGame {...mockProps} />;
     return (
       frontEnd

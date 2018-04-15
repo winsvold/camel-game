@@ -1,12 +1,14 @@
 // @flow
-import GameLogic from "../backend/gameLogic";
-
 type FrontEndProps = {
   action: string,
-  camelTired: number,
-  camelTiredLimit: number,
+  milesTraveled: number,
+  milesTraveledLastRound: number,
   camelTiredStatus: string,
+  thirstStatus: string,
+  nativesClose: string,
+  nativesDistance: number,
   canteen: number,
+  prevState: Object,
   causeOfDeath: {
     thirst: boolean,
     tiredness: boolean,
@@ -14,11 +16,5 @@ type FrontEndProps = {
   }
   dead: boolean,
   done: boolean,
-  milesFinish: number,
-  milesTraveled: number,
-  nativesTraveled: number,
-  thirst: number,
-  thirstLimit: number,
-  thirstStatus: string,
-  gameLogic: GameLogic
+  actions: GameActions
 }
