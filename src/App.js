@@ -1,10 +1,11 @@
 // @flow
 import React, {Component} from 'react';
 import CamelGame from "./frontend/camelgame";
-import {mockProps} from "./frontend/mockProps";
 import GameLogic from "./backend/gameLogic";
 import {CamelTiredNess, Natives, Thirst} from "./backend/enums";
 import SimpleFrontEnd from "./frontend/SimpleFrontEnd";
+import styled from 'styled-components';
+import ConsoleFrontEnd from "./frontend/ConsoleFrontEnd";
 
 function getFrontEndPropsFromBackend(gameLogic: GameLogic) {
   const state = gameLogic.getState();
@@ -51,8 +52,16 @@ function getFrontEndPropsFromBackend(gameLogic: GameLogic) {
 }
 
 const FrontEnds = {
-  Simple: 'simple'
+  Simple: 'Simple',
+  CamelGame: 'Camel Game',
+  Console: 'Console'
 };
+
+const FrontEndButtons = styled.div`
+  position: fixed;
+  right: 0;
+  top: 0;
+`;
 
 class App extends Component {
   gameLogic: GameLogic;
@@ -61,18 +70,38 @@ class App extends Component {
     super();
     this.gameLogic = new GameLogic(() => this.setState({}));
     this.state = {
-      frontEnd: FrontEnds.Simple
+      frontEnd: FrontEnds.Console
     };
   }
 
+  buttonRow() {
+    return Object.values(FrontEnds).map((frontend) =>
+      <button onClick={() =>
+        this.setState({
+          frontEnd: frontend
+        })}
+      >
+        {frontend}
+      </button>
+    );
+  }
+
   render() {
+    console.log(this.state.frontEnd);
     const frontEndProps = getFrontEndPropsFromBackend(this.gameLogic);
     const frontEnd =
       this.state.frontEnd === FrontEnds.Simple
         ? <SimpleFrontEnd {...frontEndProps} />
-        : <CamelGame {...mockProps} />;
+        : this.state.frontEnd === FrontEnds.Console
+        ? <ConsoleFrontEnd {...frontEndProps} />
+        : <CamelGame {...frontEndProps} />;
     return (
-      frontEnd
+      <div>
+        {frontEnd}
+        <FrontEndButtons>
+          {this.buttonRow()}
+        </FrontEndButtons>
+      </div>
     )
   }
 }

@@ -1,7 +1,6 @@
 // @flow
 import * as React from 'react';
 import styled from 'styled-components';
-import type {camelGameProps} from "./interface";
 import camelSVG from "../img/camel.svg";
 
 const AppWrapper = styled.div`
@@ -38,7 +37,7 @@ const Camel = styled.div`
   left: ${props => props.position * 0.82 + 5 }%;
 `;
 
-function CamelGame(props: camelGameProps) {
+function CamelGame(props: FrontEndProps) {
   return (
     <AppWrapper>
       <GameWindow>
