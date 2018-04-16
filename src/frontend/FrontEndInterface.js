@@ -8,6 +8,7 @@ type FrontEndProps = {
   nativesClose: string,
   nativesDistance: number,
   canteen: number,
+  canteenWarning: boolean,
   prevState: Object,
   causeOfDeath: {
     thirst: boolean,

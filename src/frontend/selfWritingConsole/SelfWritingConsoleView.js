@@ -8,12 +8,20 @@ class SelfWritingConsoleView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      IBeamBlink: true
+      IBeamBlink: true,
+      Interval: null
     };
   }
 
   componentDidMount() {
-    setInterval(() => this.blinkIBeamHack(), 200);
+    const interval = setInterval(() => this.blinkIBeamHack(), 200);
+    this.setState({
+      Interval: interval
+    });
+  }
+
+  componentWillUnmount(){
+    clearInterval(this.state.Interval);
   }
 
   blinkIBeamHack() { //Hack to make the span work with newLines. For some reason the IBeamBlink will prevent text from rendering on the new line, but removing it shortly solves the problem.

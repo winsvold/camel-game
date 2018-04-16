@@ -14,7 +14,7 @@ class SelfWritingConsole extends Component {
             timeoutRef: undefined
         };
     }
-    
+
     componentDidMount(){
         this.startWriting(this.props);
     }
@@ -28,21 +28,15 @@ class SelfWritingConsole extends Component {
     }
 
     componentWillReceiveProps(nextProps){
-        if(this.state.active)
-            return;
-        if(nextProps.textComponents[0].text !== this.props.textComponents[0].text){
-            this.setState({
-                lineNumber: 0,
-                linePosition: 0,
-                outPut: '',
-                active: true
-            });
-            this.startWriting(nextProps);
-        } else {
-            this.props.callBack();
-        }
+        this.setState({
+            lineNumber: 0,
+            linePosition: 0,
+            outPut: '',
+            active: true
+        });
+        this.startWriting(nextProps);
     }
-    
+
     updateText(){
         const lineNumber = this.state.lineNumber;
         const linePos = this.state.linePosition;

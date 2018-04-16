@@ -11,11 +11,12 @@ type stateType = {
   },
   milesTraveled: number,
   thirst: number,
+  canteen: number,
+  canteenWarning: boolean,
   thirstLimit: number,
   camelTired: number,
   camelTiredLimit: number,
   nativesTraveled: number,
-  canteen: number,
   milesFinish: number
 }
 
@@ -29,11 +30,12 @@ const defaultState: stateType = {
   },
   milesTraveled: 0,
   thirst: 0,
+  canteen: 3,
+  canteenWarning: false,
   thirstLimit: 6,
   camelTired: 0,
   camelTiredLimit: 8,
   nativesTraveled: -20,
-  canteen: 3,
   milesFinish: 200
 };
 
@@ -124,10 +126,13 @@ class GameLogic {
     if (this.state.canteen > 0) {
       stateUpdate = {
         thirst: 0,
-        canteen: this.state.canteen - 1
+        canteen: this.state.canteen - 1,
+        canteenWarning: false
       };
     } else {
-      stateUpdate = {};
+      stateUpdate = {
+        canteenWarning: true
+      };
     }
     this.updateState(stateUpdate, Actions.Drink);
   }

@@ -28,7 +28,10 @@
   height: 100vh;
   width: 100vw;
 }
-.wake-up-container p:last-of-type:not(:first-of-type) {
+.wake-up-container p {
+  margin-top: 0;
+}
+.wake-up-container p:last-of-type {
   display: initial;
 }
 .wake-up-container .backDrop {
@@ -44,7 +47,7 @@
   }
 }
 .wake-up-container .backDrop .wake-up-console {
-  font-size: 5vw;
+  font-size: 5vmin;
   line-height: 1em;
   text-transform: uppercase;
   font-family: 'Amatic SC', cursive;

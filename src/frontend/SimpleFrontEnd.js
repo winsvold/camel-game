@@ -31,7 +31,7 @@ function rest(props: FrontEndProps) {
 function drink(props: FrontEndProps) {
   return (
     <div>
-      {props.prevState.canteen === 0 ? <div>The bottle is empty!</div> : <div>So refreshing</div>}
+      {props.canteenWarning ? <div>The bottle is empty!</div> : <div>So refreshing</div>}
     </div>
   );
 }
