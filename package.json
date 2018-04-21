@@ -2,10 +2,12 @@
   "name": "camel-game",
   "version": "0.1.0",
   "private": true,
+  "homepage": "http://winsvold.github.io/camel-game/",
   "dependencies": {
     "react": "^16.3.1",
     "react-dom": "^16.3.1",
-    "react-scripts": "1.1.4"
+    "react-scripts": "1.1.4",
+    "styled-components": "^3.2.5"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -15,7 +17,9 @@
     "eject": "react-scripts eject",
     "storybook": "start-storybook -p 9009 -s public",
     "build-storybook": "build-storybook -s public",
-    "flow": "flow"
+    "flow": "flow",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "devDependencies": {
     "@storybook/addon-actions": "^3.4.0",
@@ -25,6 +29,6 @@
     "autoless": "^0.1.7",
     "babel-core": "^6.26.0",
     "flow-bin": "^0.69.0",
-    "styled-components": "^3.2.5"
+    "gh-pages": "^1.1.0"
   }
 }

@@ -3,6 +3,7 @@ type FrontEndProps = {
   action: string,
   milesTraveled: number,
   milesTraveledLastRound: number,
+  milesFinish: number,
   camelTiredStatus: string,
   thirstStatus: string,
   nativesClose: string,

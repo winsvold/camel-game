@@ -5,7 +5,7 @@ import GameLogic from "./backend/gameLogic";
 import {CamelTiredNess, Natives, Thirst} from "./backend/enums";
 import SimpleFrontEnd from "./frontend/SimpleFrontEnd";
 import styled from 'styled-components';
-import ConsoleFrontEnd from "./frontend/ConsoleFrontEnd";
+import ConsoleFrontEnd from "./frontend/consolefrontend/ConsoleFrontEnd";
 
 function getFrontEndPropsFromBackend(gameLogic: GameLogic) {
   const state = gameLogic.getState();
